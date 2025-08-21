@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "sismanager"
+version = "0.1.0"
+description = ""
+authors = ["fedem-p <federicopuppo671@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.3.2"
+requests = "^2.32.5"
+python-dotenv = "^1.1.1"
+flask = "^3.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
+mypy = "^1.17.1"
+pylint = "^3.3.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

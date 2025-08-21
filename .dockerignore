@@ -1,0 +1,21 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files in Docker builds.
+
+__pycache__/
+*.py[cod]
+*.so
+*.log
+.env
+.venv
+env/
+venv/
+ENV/
+.vscode/
+.ipynb_checkpoints
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+/data/results/

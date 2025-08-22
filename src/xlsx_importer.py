@@ -2,14 +2,13 @@
 
 import os
 import shutil
-import tempfile
 from typing import List, Optional
 
 import pandas as pd
 from tqdm import tqdm
 
 from .backup import BackupManager
-from .config import CENTRAL_DB_PATH, logger
+from .config import logger
 from .central_db_repository import CentralDBRepository
 
 

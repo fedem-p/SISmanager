@@ -11,6 +11,10 @@ pandas = "^2.3.2"
 requests = "^2.32.5"
 python-dotenv = "^1.1.1"
 flask = "^3.1.2"
+openpyxl = "^3.1.5"
+tqdm = "^4.67.1"
+pandas-stubs = "^2.3.0.250703"
+types-tqdm = "^4.67.0.20250809"
 
 
 [tool.poetry.group.dev.dependencies]

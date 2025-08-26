@@ -1,0 +1,7 @@
+orderCode,idOrderPos,descrizioneMateriale,codiceMateriale,quantity
+ORDER001,1,Material A,MAT001,10
+ORDER001,2,Material B,MAT002,5
+ORDER001,1,Material A,MAT001,10
+ORDER002,1,Material C,MAT003,15
+ORDER002,2,Material A,MAT001,8
+ORDER002,1,Material C,MAT003,15

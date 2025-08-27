@@ -66,4 +66,5 @@ venv.bak/
 *.log
 
 # Data
-/data/results/
+/data
+

@@ -5,7 +5,7 @@ import logging
 from unittest.mock import patch
 import pytest
 
-import src.config as config
+import sismanager.config as config
 
 
 @pytest.fixture

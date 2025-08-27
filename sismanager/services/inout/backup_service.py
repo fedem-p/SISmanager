@@ -5,7 +5,7 @@ import os
 import shutil
 from datetime import datetime, timedelta
 
-from .config import CENTRAL_DB_PATH, BACKUP_DIR, logger
+from sismanager.config import CENTRAL_DB_PATH, BACKUP_DIR, logger
 
 
 class BackupManager:

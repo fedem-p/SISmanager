@@ -227,22 +227,60 @@ poetry run mypy src/ tests/           # Type checking
 
 ```
 SISmanager/
-├── src/                              # Source code
-│   ├── central_db_repository.py      # Database operations
-│   ├── xlsx_importer.py              # XLSX import logic
-│   ├── backup.py                     # Backup management
-│   ├── config.py                     # Configuration & logging
-│   └── run_xlsx_to_centraldb.py      # Example script
-├── tests/                            # Test suite
-│   ├── unit/                         # Unit tests
-│   ├── integration/                  # Integration tests
-│   └── fixtures/                     # Test data
-├── data/                             # Data directory
-│   └── backups/                      # Backup files
-├── docker-compose.yml               # Docker configuration
-├── pyproject.toml                   # Poetry configuration
-├── lint.sh                          # Linting script
-└── README.md                        # This file
+├── pyproject.toml
+├── poetry.lock
+├── run.py                          # Application entry point (create this if missing)
+├── config.py                       # Configuration
+├── sismanager/                     # Main package
+│   ├── __init__.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── student.py
+│   │   ├── part.py
+│   │   └── money.py
+│   ├── blueprints/
+│   │   ├── __init__.py
+│   │   ├── main/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   └── templates/
+│   │   ├── importer/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   ├── forms.py
+│   │   │   └── templates/
+│   │   ├── calendar/
+│   │   ├── materials/
+│   │   └── money/
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── csv_service.py
+│   │   ├── backup_service.py
+│   │   └── import_service.py
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── validators.py
+│   │   └── helpers.py
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── img/
+│   └── templates/
+│       └── base.html
+├── data/
+│   ├── central_db.csv
+│   ├── backups/
+├── tests/
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── fixtures/
+│   ├── integration/
+│   └── unit/
+├── deployment/
+│   ├── windows/
+│   └── docker/
+└── scripts/                        # (optional, for CLI/test scripts)
+    └── run_xlsx_to_centraldb.py
 ```
 
 ### Contributing
@@ -323,3 +361,5 @@ For questions or issues, please:
 1. Check the troubleshooting section above
 2. Review existing issues in the repository
 3. Create a new issue with detailed information about your problem
+
+

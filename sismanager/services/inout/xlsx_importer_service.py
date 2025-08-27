@@ -7,9 +7,9 @@ from typing import List, Optional
 import pandas as pd
 from tqdm import tqdm
 
-from .backup import BackupManager
-from .config import logger
-from .central_db_repository import CentralDBRepository
+from sismanager.services.inout.backup_service import BackupManager
+from sismanager.config import logger
+from sismanager.services.inout.central_db_service import CentralDBRepository
 
 
 class XLSXImporter:

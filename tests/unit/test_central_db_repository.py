@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
-from src.central_db_repository import CentralDBRepository
+from sismanager.services.inout.central_db_service import CentralDBRepository
 
 
 @pytest.fixture

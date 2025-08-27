@@ -4,10 +4,10 @@
 set -e
 
 # Format code with black
-poetry run black src/ tests/
+poetry run black sismanager/ tests/
 
 # Run pylint for code quality
-poetry run pylint src/ tests/
+poetry run pylint sismanager/
 
 # Run mypy for type checking
-poetry run mypy src/ tests/
+poetry run mypy sismanager/

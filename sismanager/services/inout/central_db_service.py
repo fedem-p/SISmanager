@@ -3,7 +3,7 @@
 from typing import Optional, List
 import os
 import pandas as pd
-from .config import CENTRAL_DB_PATH, logger
+from sismanager.config import CENTRAL_DB_PATH, logger
 
 
 class CentralDBRepository:

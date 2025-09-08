@@ -5,9 +5,12 @@ class ImporterApp {
         this.files = new Map(); // Store files with their status
         this.isProcessing = false;
         this.processedFiles = [];
+        this.statusPollingInterval = null;
+        this.uploadedFileIds = new Set(); // Track uploaded file IDs
         
         this.initializeElements();
         this.attachEventListeners();
+        this.startStatusPolling();
     }
 
     initializeElements() {
@@ -155,12 +158,38 @@ class ImporterApp {
     }
 
     clearFiles() {
+        // Cleanup uploaded files on server
+        this.uploadedFileIds.forEach(fileId => {
+            this.cleanupFile(fileId).catch(console.error);
+        });
+        
         this.files.clear();
+        this.uploadedFileIds.clear();
+        this.processedFiles = [];
         this.renderFileList();
         this.updateButtonStates();
         this.hideProcessingStatus();
         this.hidePostProcessActions();
         this.fileInput.value = '';
+    }
+
+    async cleanupFile(fileId) {
+        try {
+            await fetch(`/api/cleanup/${fileId}`, {
+                method: 'DELETE'
+            });
+        } catch (error) {
+            console.error('Error cleaning up file:', error);
+        }
+    }
+
+    // Cleanup on page unload
+    beforeUnload() {
+        this.stopStatusPolling();
+        // Cleanup files
+        this.uploadedFileIds.forEach(fileId => {
+            navigator.sendBeacon(`/api/cleanup/${fileId}`, new FormData());
+        });
     }
 
     formatFileSize(bytes) {
@@ -215,7 +244,7 @@ class ImporterApp {
         formData.append('files', fileData.file);
 
         try {
-            const response = await fetch('/importer/api/upload', {
+            const response = await fetch('/api/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -224,7 +253,12 @@ class ImporterApp {
 
             if (response.ok && result.success) {
                 fileData.status = 'success';
+                fileData.fileId = result.file_id; // Store the file ID from server response
+                this.uploadedFileIds.add(result.file_id);
                 this.processedFiles.push(fileName);
+                
+                // Process the uploaded file
+                await this.processUploadedFile(result.file_id);
             } else {
                 throw new Error(result.message || 'Upload failed');
             }
@@ -236,8 +270,66 @@ class ImporterApp {
         }
     }
 
+    async processUploadedFile(fileId) {
+        try {
+            const response = await fetch(`/api/process/${fileId}`, {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'File processing failed');
+            }
+        } catch (error) {
+            console.error('Error processing file:', error);
+            throw error;
+        }
+    }
+
+    // Status Polling
+    startStatusPolling() {
+        // Poll for status updates every 2 seconds
+        this.statusPollingInterval = setInterval(() => {
+            this.updateFileStatuses();
+        }, 2000);
+    }
+
+    stopStatusPolling() {
+        if (this.statusPollingInterval) {
+            clearInterval(this.statusPollingInterval);
+            this.statusPollingInterval = null;
+        }
+    }
+
+    async updateFileStatuses() {
+        if (this.uploadedFileIds.size === 0) return;
+
+        try {
+            const response = await fetch('/api/status');
+            
+            if (response.ok) {
+                const statuses = await response.json();
+                
+                // Update file statuses based on server response
+                this.files.forEach((fileData, fileName) => {
+                    if (fileData.fileId && statuses[fileData.fileId]) {
+                        const serverStatus = statuses[fileData.fileId];
+                        if (fileData.status !== serverStatus.status) {
+                            fileData.status = serverStatus.status;
+                            fileData.progress = serverStatus.progress || 0;
+                            this.renderFileList();
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error polling status:', error);
+        }
+    }
+
     async removeDuplicates() {
-        if (this.processedFiles.length === 0) {
+        if (this.uploadedFileIds.size === 0) {
             this.showMessage('No processed files to deduplicate.', 'warning');
             return;
         }
@@ -245,7 +337,9 @@ class ImporterApp {
         this.setButtonLoading(this.removeDuplicatesBtn, true);
 
         try {
-            const response = await fetch('/importer/api/remove-duplicates', {
+            // Use the first file ID for deduplication (since it's a global operation)
+            const fileId = Array.from(this.uploadedFileIds)[0];
+            const response = await fetch(`/api/remove-duplicates/${fileId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -258,7 +352,7 @@ class ImporterApp {
             const result = await response.json();
 
             if (response.ok && result.success) {
-                this.showMessage(`Removed ${result.removed_count} duplicate entries.`, 'success');
+                this.showMessage(`Removed ${result.removed_count || 0} duplicate entries.`, 'success');
             } else {
                 throw new Error(result.message || 'Deduplication failed');
             }
@@ -270,10 +364,17 @@ class ImporterApp {
     }
 
     async exportData() {
+        if (this.uploadedFileIds.size === 0) {
+            this.showMessage('No processed files to export.', 'warning');
+            return;
+        }
+
         this.setButtonLoading(this.exportBtn, true);
 
         try {
-            const response = await fetch('/importer/api/export', {
+            // Use the first file ID for export (since it's a global operation)
+            const fileId = Array.from(this.uploadedFileIds)[0];
+            const response = await fetch(`/api/export/${fileId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -310,11 +411,11 @@ class ImporterApp {
     // UI Helper Functions
     updateButtonStates() {
         const hasFiles = this.files.size > 0;
-        const hasProcessedFiles = this.processedFiles.length > 0;
+        const hasUploadedFiles = this.uploadedFileIds.size > 0;
         
         this.processBtn.disabled = !hasFiles || this.isProcessing;
-        this.removeDuplicatesBtn.disabled = !hasProcessedFiles;
-        this.exportBtn.disabled = !hasProcessedFiles;
+        this.removeDuplicatesBtn.disabled = !hasUploadedFiles;
+        this.exportBtn.disabled = !hasUploadedFiles;
     }
 
     setButtonLoading(button, loading) {
@@ -372,4 +473,9 @@ class ImporterApp {
 let importer;
 document.addEventListener('DOMContentLoaded', () => {
     importer = new ImporterApp();
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        importer.beforeUnload();
+    });
 });

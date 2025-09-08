@@ -24,7 +24,7 @@ jobs:
       - name: 🚦 Linting Time! 🚦
         run: |
           echo -e "\033[1;35mLet's get linty!\033[0m"
-          bash lint.sh
+          bash lint.sh check
 
   test:
     runs-on: ubuntu-latest

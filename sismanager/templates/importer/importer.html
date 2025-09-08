@@ -1,5 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Importer</h1>
-<p>Import your data here.</p>
+<h1>Data Importer</h1>
+<p>Upload XLSX files to import data into the central database.</p>
+
+<!-- File Upload Area -->
+<div class="upload-section">
+    <div id="dropZone" class="drop-zone">
+        <div class="drop-zone-content">
+            <i class="upload-icon">📁</i>
+            <h3>Drop XLSX files here or click to browse</h3>
+            <p>Supported formats: .xlsx, .xls</p>
+            <button id="browseBtn" class="btn btn-secondary">Browse Files</button>
+        </div>
+        <input type="file" id="fileInput" multiple accept=".xlsx,.xls" style="display: none;">
+    </div>
+</div>
+
+<!-- File List -->
+<div id="fileListSection" class="file-list-section" style="display: none;">
+    <h3>Selected Files</h3>
+    <div id="fileList" class="file-list"></div>
+    
+    <div class="action-buttons">
+        <button id="processBtn" class="btn btn-primary" disabled>
+            <span class="btn-text">Process Files</span>
+            <span class="btn-spinner" style="display: none;">🔄</span>
+        </button>
+        <button id="clearBtn" class="btn btn-secondary">Clear All</button>
+    </div>
+</div>
+
+<!-- Processing Status -->
+<div id="processingStatus" class="processing-status" style="display: none;">
+    <h3>Processing Status</h3>
+    <div class="status-item">
+        <span class="status-label">Files Processed:</span>
+        <span id="processedCount">0</span> / <span id="totalCount">0</span>
+    </div>
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+</div>
+
+<!-- Post-Processing Actions -->
+<div id="postProcessActions" class="post-process-actions" style="display: none;">
+    <h3>Data Management</h3>
+    <div class="action-buttons">
+        <button id="removeDuplicatesBtn" class="btn btn-warning">
+            <span class="btn-text">Remove Duplicates</span>
+            <span class="btn-spinner" style="display: none;">🔄</span>
+        </button>
+        <button id="exportBtn" class="btn btn-success">
+            <span class="btn-text">Export Processed Data</span>
+            <span class="btn-spinner" style="display: none;">⬇️</span>
+        </button>
+    </div>
+</div>
+
+<!-- Messages -->
+<div id="messages" class="messages"></div>
+
+<!-- Link to CSS and JS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/importer.css') }}">
+<script src="{{ url_for('static', filename='js/importer.js') }}"></script>
 {% endblock %}

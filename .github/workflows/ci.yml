@@ -1,0 +1,46 @@
+
+name: "🎉 SISmanager CI Carnival 🎉"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Install dependencies
+        run: poetry install
+      - name: 🚦 Linting Time! 🚦
+        run: |
+          echo -e "\033[1;35mLet's get linty!\033[0m"
+          bash lint.sh check
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Install dependencies
+        run: poetry install
+      - name: 🧪 Test Parade! 🧪
+        run: |
+          echo -e "\033[1;36mRunning the test parade!\033[0m"
+          bash test.sh

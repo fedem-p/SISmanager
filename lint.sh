@@ -3,11 +3,19 @@
 
 set -e
 
-# Format code with black
-poetry run black src/ tests/
+
+MODE=${1:-fix}
+
+if [ "$MODE" = "check" ]; then
+	# Check code formatting with black (no changes)
+	poetry run black --check sismanager/ tests/
+else
+	# Format code with black
+	poetry run black sismanager/ tests/
+fi
 
 # Run pylint for code quality
-poetry run pylint src/ tests/
+poetry run pylint sismanager/
 
 # Run mypy for type checking
-poetry run mypy src/ tests/
+poetry run mypy sismanager/

@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 from datetime import datetime, timedelta
 import pytest
 
-from src.backup import BackupManager
+from sismanager.services.inout.backup_service import BackupManager
 
 
 @pytest.fixture

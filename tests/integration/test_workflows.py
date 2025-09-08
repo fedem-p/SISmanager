@@ -5,9 +5,9 @@ import pandas as pd
 from unittest.mock import patch
 import pytest
 
-from src.xlsx_importer import XLSXImporter
-from src.central_db_repository import CentralDBRepository
-from src.backup import BackupManager
+from sismanager.services.inout.xlsx_importer_service import XLSXImporter
+from sismanager.services.inout.central_db_service import CentralDBRepository
+from sismanager.services.inout.backup_service import BackupManager
 
 
 @pytest.fixture

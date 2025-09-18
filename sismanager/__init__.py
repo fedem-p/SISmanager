@@ -15,10 +15,10 @@ from sismanager.blueprints.money.routes import money_bp
 def create_app():
     """Create and configure the Flask application."""
     app = Flask(__name__)
-    
+
     # Configuration for file uploads
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
-    app.config['UPLOAD_EXTENSIONS'] = ['.xlsx', '.xls']
+    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB max file size
+    app.config["UPLOAD_EXTENSIONS"] = [".xlsx", ".xls"]
 
     app.register_blueprint(main_bp)
     app.register_blueprint(importer_bp)

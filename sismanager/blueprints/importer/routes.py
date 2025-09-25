@@ -89,8 +89,8 @@ def upload_and_process():
     output_path = os.path.join(processed_dir, output_filename)
     importer.export_to_xlsx(output_path)
 
-    # Generate preview HTML (full table, scrollable in frontend)
-    df = pd.read_excel(output_path)
+    # Generate preview HTML (full table, scrollable in frontend) using in-memory DataFrame
+    df = importer.repository.read()
     output_preview = df.to_html(classes="table table-bordered", index=False)
 
     # Provide download link and preview

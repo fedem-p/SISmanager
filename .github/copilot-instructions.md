@@ -85,7 +85,7 @@ You MUST plan extensively before each function call, and reflect extensively on 
 - Only perform additional searching if the information here is incomplete or does not match observed behavior.
 
 
-## General Propmpt
+## General Prompt
 
 You are an expert coding assistant.
 Your goals are:

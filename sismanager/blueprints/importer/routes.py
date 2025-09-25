@@ -2,10 +2,18 @@
 Routes for importer blueprint in SISmanager.
 """
 
-from flask import Blueprint, render_template
-from flask import request, redirect, url_for, send_from_directory, flash
 import os
 import uuid
+import pandas as pd
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    send_from_directory,
+    flash,
+)
 from sismanager.services.inout.xlsx_importer_service import XLSXImporter
 from sismanager.services.inout.backup_service import BackupManager
 
@@ -15,12 +23,14 @@ importer_bp = Blueprint(
 
 ALLOWED_EXTENSIONS = {"xlsx", "xls"}
 
+
 def allowed_file(filename):
     """Check if file extension is allowed."""
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @importer_bp.route("/importer")
-def importer():
+def importer_page():
     """Render the importer page."""
     return render_template("importer/importer.html")
 
@@ -48,7 +58,9 @@ def upload_and_process():
         return redirect(request.url)
 
     # Save uploaded file
-    uploads_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..", "data", "uploads"))
+    uploads_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../../..", "data", "uploads")
+    )
     os.makedirs(uploads_dir, exist_ok=True)
     unique_id = str(uuid.uuid4())
     filename = f"{unique_id}_{file.filename}"
@@ -69,14 +81,15 @@ def upload_and_process():
         importer.remove_duplicates(mode="forceful")
 
     # Export processed file
-    processed_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..", "data", "processed"))
+    processed_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../../..", "data", "processed")
+    )
     os.makedirs(processed_dir, exist_ok=True)
     output_filename = f"processed_{unique_id}.xlsx"
     output_path = os.path.join(processed_dir, output_filename)
     importer.export_to_xlsx(output_path)
 
     # Generate preview HTML (full table, scrollable in frontend)
-    import pandas as pd
     df = pd.read_excel(output_path)
     output_preview = df.to_html(classes="table table-bordered", index=False)
 
@@ -87,10 +100,11 @@ def upload_and_process():
         output_preview=output_preview,
     )
 
+
 @importer_bp.route("/api/download/<file_id>")
 def download_file(file_id: str):
     """Download a processed file."""
-    processed_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..", "data", "processed"))
+    processed_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../../..", "data", "processed")
+    )
     return send_from_directory(processed_dir, file_id, as_attachment=True)
-    pass
-

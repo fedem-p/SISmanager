@@ -39,7 +39,7 @@ class XLSXImporter:
             df = pd.read_excel(self.xlsx_path)
             if self.columns_to_keep:
                 df = df[self.columns_to_keep]
-            # Add orderCode column with the original file name (without extension) as the first column
+            # Add orderCode col with the original file name (without extension) as the first column
             order_code = os.path.splitext(self.original_filename or self.file_name)[0]
             df.insert(0, "orderCode", order_code)
             # Progress bar for converting to dict

@@ -55,8 +55,8 @@ def upload_and_process():
     file_path = os.path.join(uploads_dir, filename)
     file.save(file_path)
 
-    # Process XLSX
-    importer = XLSXImporter(file_path)
+    # Process XLSX, pass original filename for orderCode
+    importer = XLSXImporter(file_path, original_filename=file.filename)
     importer.process()
 
     # Delete backups older than 30 days

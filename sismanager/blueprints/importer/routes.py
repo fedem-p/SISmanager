@@ -4,7 +4,6 @@ Routes for importer blueprint in SISmanager.
 
 import os
 import uuid
-import pandas as pd
 from flask import (
     Blueprint,
     render_template,

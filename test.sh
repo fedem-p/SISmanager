@@ -4,4 +4,4 @@
 set -e
 
 # Run all tests with pytest
-poetry run pytest -v --cov=src --cov-report=term-missing
+poetry run pytest -v --cov=sismanager --cov-report=term-missing

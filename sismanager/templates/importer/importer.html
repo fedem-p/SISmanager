@@ -2,4 +2,25 @@
 {% block content %}
 <h1>Importer</h1>
 <p>Import your data here.</p>
+<form action="/importer/upload" method="post" enctype="multipart/form-data">
+	<label for="file">Select XLSX file:</label>
+	<input type="file" id="file" name="file" accept=".xlsx,.xls" required><br><br>
+	<input type="checkbox" id="remove_duplicates" name="remove_duplicates" value="yes">
+	<label for="remove_duplicates">Remove duplicates</label><br><br>
+	<button type="submit">Import</button>
+</form>
+
+<br>
+<form action="{{ download_link if download_link else '#' }}" method="get">
+	<button type="submit"
+		{% if not download_link %}disabled title="No processed file available. Please import a file first."{% else %}title="Download the processed file."{% endif %}
+	>Download processed file</button>
+</form>
+
+{% if output_preview %}
+	<h2>Preview of processed file</h2>
+	<div style="max-height:400px; overflow:auto; border:1px solid #ccc; margin-top:10px;">
+		{{ output_preview|safe }}
+	</div>
+{% endif %}
 {% endblock %}

@@ -22,10 +22,12 @@ class XLSXImporter:
         xlsx_path: str,
         columns_to_keep: Optional[List[str]] = None,
         repository: Optional[CentralDBRepository] = None,
+        original_filename: Optional[str] = None,
     ):
         """Initialize with XLSX file path, optional columns to keep, and repository (DI)."""
         self.xlsx_path = xlsx_path
         self.file_name = os.path.basename(xlsx_path)
+        self.original_filename = original_filename
         self.rows = []
         self.columns_to_keep = columns_to_keep
         self.backup_manager = BackupManager()
@@ -37,8 +39,8 @@ class XLSXImporter:
             df = pd.read_excel(self.xlsx_path)
             if self.columns_to_keep:
                 df = df[self.columns_to_keep]
-            # Add orderCode column with the file name (without extension) as the first column
-            order_code = os.path.splitext(self.file_name)[0]
+            # Add orderCode col with the original file name (without extension) as the first column
+            order_code = os.path.splitext(self.original_filename or self.file_name)[0]
             df.insert(0, "orderCode", order_code)
             # Progress bar for converting to dict
             self.rows = []

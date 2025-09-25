@@ -16,4 +16,11 @@
 		{% if not download_link %}disabled title="No processed file available. Please import a file first."{% else %}title="Download the processed file."{% endif %}
 	>Download processed file</button>
 </form>
+
+{% if output_preview %}
+	<h2>Preview of processed file</h2>
+	<div style="max-height:400px; overflow:auto; border:1px solid #ccc; margin-top:10px;">
+		{{ output_preview|safe }}
+	</div>
+{% endif %}
 {% endblock %}

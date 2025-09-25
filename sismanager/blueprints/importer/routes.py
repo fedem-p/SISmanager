@@ -75,10 +75,16 @@ def upload_and_process():
     output_path = os.path.join(processed_dir, output_filename)
     importer.export_to_xlsx(output_path)
 
-    # Provide download link
+    # Generate preview HTML (full table, scrollable in frontend)
+    import pandas as pd
+    df = pd.read_excel(output_path)
+    output_preview = df.to_html(classes="table table-bordered", index=False)
+
+    # Provide download link and preview
     return render_template(
         "importer/importer.html",
         download_link=url_for("importer.download_file", file_id=output_filename),
+        output_preview=output_preview,
     )
 
 @importer_bp.route("/api/download/<file_id>")

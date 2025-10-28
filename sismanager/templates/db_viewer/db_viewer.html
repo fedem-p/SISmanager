@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.table-container table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 10;
+    border-bottom: 2px solid #dee2e6;
+}
+</style>
+
+<!-- Title on top -->
+<h1>Database Viewer</h1>
+<p>View current database contents.</p>
+
+<div style="display: flex; gap: 20px; height: 70vh;">
+    <!-- Sidebar -->
+    <div style="min-width: 250px; background: #f8f9fa; padding: 15px; border: 1px solid #ddd; display: flex; flex-direction: column;">
+        <h3 style="margin-top: 0;">Column Filter</h3>
+        {% if available_columns %}
+        <form action="/db_viewer" method="post" style="display: flex; flex-direction: column; height: 100%;">
+            <p>Select columns to display:</p>
+            <!-- Scrollable options -->
+            <div style="flex: 1; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; background: white;">
+                {% for column in available_columns %}
+                    <input type="checkbox" id="{{ column }}" name="columns" value="{{ column }}" 
+                           {% if column in selected_columns %}checked{% endif %}>
+                    <label for="{{ column }}">{{ column }}</label><br>
+                {% endfor %}
+            </div>
+            
+            <div>
+                <button type="submit">Apply Filter</button>
+                <button type="submit" name="columns" value="">Show All</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+    
+    <!-- Main content area -->
+    <div style="flex: 1; min-width: 0;">
+        <!-- Table as before -->
+        <div class="table-container" style="max-height:100%; overflow:auto; border:1px solid #ccc; margin-top:10px; max-width: 100%;">
+            {{ db_preview|safe }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,202 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Calendar</h1>
-<p>View and manage your calendar here.</p>
+<div class="calendar-header">
+    <h1>Calendar</h1>
+    <div class="calendar-navigation">
+        <a href="/calendar?year={{ prev_year }}&month={{ prev_month }}" class="nav-btn">&laquo; Previous</a>
+        <h2>{{ month_name }} {{ year }}</h2>
+        <a href="/calendar?year={{ next_year }}&month={{ next_month }}" class="nav-btn">Next &raquo;</a>
+    </div>
+</div>
+
+<div class="calendar-container">
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                {% for day_name in day_names %}
+                    <th class="day-header">{{ day_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in month_calendar %}
+                <tr class="calendar-week">
+                    {% for day in week %}
+                        <td class="calendar-day 
+                            {% if day == 0 %}empty-day{% endif %}
+                            {% if day == current_day and is_current_month %}today{% endif %}
+                        ">
+                            {% if day != 0 %}
+                                <span class="day-number">{{ day }}</span>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+/* Calendar-specific styles */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.calendar-navigation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.calendar-navigation h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.5em;
+}
+
+.nav-btn {
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.nav-btn:hover {
+    background: #2980b9;
+    text-decoration: none;
+    color: white;
+}
+
+.calendar-container {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.day-header {
+    background: #34495e;
+    color: white;
+    padding: 15px 8px;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid #2c3e50;
+}
+
+.calendar-week {
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.calendar-day {
+    height: 80px;
+    width: 14.28%; /* 100% / 7 days */
+    padding: 8px;
+    vertical-align: top;
+    border-right: 1px solid #ecf0f1;
+    position: relative;
+    background: #fafafa;
+    transition: background-color 0.2s;
+}
+
+.calendar-day:hover {
+    background: #e8f4fd;
+}
+
+.calendar-day:last-child {
+    border-right: none;
+}
+
+.empty-day {
+    background: #f8f9fa;
+    cursor: default;
+}
+
+.empty-day:hover {
+    background: #f8f9fa;
+}
+
+.day-number {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.today {
+    background: #3498db !important;
+    color: white;
+}
+
+.today .day-number {
+    color: white;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.today:hover {
+    background: #2980b9 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .calendar-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .calendar-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .calendar-day {
+        height: 60px;
+        padding: 4px;
+    }
+    
+    .day-header {
+        padding: 10px 4px;
+        font-size: 0.9em;
+    }
+    
+    .day-number {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        height: 45px;
+        padding: 2px;
+    }
+    
+    .day-number {
+        font-size: 0.9em;
+    }
+    
+    .day-header {
+        padding: 8px 2px;
+        font-size: 0.8em;
+    }
+}
+</style>
 {% endblock %}

@@ -1,5 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Calendar</h1>
-<p>View and manage your calendar here.</p>
+<div class="calendar-header">
+    <h1>Calendar</h1>
+    <div class="calendar-navigation">
+        <a href="/calendar?year={{ prev_year }}&month={{ prev_month }}" class="nav-btn">&laquo; Previous</a>
+        <h2>{{ month_name }} {{ year }}</h2>
+        <a href="/calendar?year={{ next_year }}&month={{ next_month }}" class="nav-btn">Next &raquo;</a>
+    </div>
+</div>
+
+<div class="calendar-container">
+    <table class="calendar-table">
+        <caption class="sr-only">Calendar for {{ month_name }} {{ year }}</caption>
+        <thead>
+            <tr>
+                {% for day_name in day_names %}
+                    <th class="day-header" scope="col">{{ day_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in month_calendar %}
+                <tr class="calendar-week">
+                    {% for day in week %}
+                        <td class="calendar-day 
+                            {% if day == 0 %}empty-day{% endif %}
+                            {% if day == current_day and is_current_month %}today{% endif %}
+                        ">
+                            {% if day != 0 %}
+                                <span class="day-number">{{ day }}</span>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

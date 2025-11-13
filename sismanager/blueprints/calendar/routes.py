@@ -15,18 +15,28 @@ calendar_bp = Blueprint(
 def calendar():
     """Render the calendar page with month navigation."""
     # Get month and year from query parameters or default to current
+    current_date = datetime.now()
     try:
-        year = int(request.args.get("year", datetime.now().year))
-        month = int(request.args.get("month", datetime.now().month))
+        year = int(request.args.get("year", current_date.year))
+        month = int(request.args.get("month", current_date.month))
     except (ValueError, TypeError):
-        year = datetime.now().year
-        month = datetime.now().month
+        year = current_date.year
+        month = current_date.month
 
-    # Validate month and year ranges
-    if month < 1 or month > 12:
-        month = datetime.now().month
-    if year < 1900 or year > 2100:
-        year = datetime.now().year
+    # Validate month and year ranges - maintain user intent where possible
+    year_valid = 1900 <= year <= 2100
+    month_valid = 1 <= month <= 12
+
+    # If both invalid, reset to current date
+    if not year_valid and not month_valid:
+        year = current_date.year
+        month = current_date.month
+    # If only year invalid, keep user's month choice but use current year
+    elif not year_valid:
+        year = current_date.year
+    # If only month invalid, keep user's year choice but use current month
+    elif not month_valid:
+        month = current_date.month
 
     # Get calendar data
     calendar_data = generate_calendar_data(year, month)

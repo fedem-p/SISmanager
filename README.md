@@ -1,6 +1,12 @@
 # SISmanager
 
+![CI Status](https://github.com/fedem-p/SISmanager/workflows/CI/badge.svg)
+![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)
+![Code Style](https://img.shields.io/badge/code%20style-black-black.svg)
+
 SISmanager is a Python-based project for managing Student Information Systems, focused on data import/export, deduplication, and backup of student records. It is designed for use in Dockerized environments and uses Poetry for dependency management.
+
+> **📋 Repository Audit Available:** A comprehensive code quality audit has been completed. See [AUDIT_INDEX.md](AUDIT_INDEX.md) for quick wins and improvement recommendations.
 
 ## Features
 
